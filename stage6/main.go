@@ -1,7 +1,7 @@
 package main
 
 /*
-[Regex Engine - Stage 5/6: Controlling repetition](https://hyperskill.org/projects/114/stages/623/implement)
+[Regex Engine - Stage 6/6: Escaping](https://hyperskill.org/projects/114/stages/624/implement)
 -------------------------------------------------------------------------------
 ##### 🚫 NO NEW TOPICS REQUIRED 🚫 #####
 */
