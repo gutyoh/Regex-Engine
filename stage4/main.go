@@ -18,7 +18,6 @@ func checkChar(regex, char string) bool {
 }
 
 func checkStr(regex, word string) bool {
-
 	switch {
 	case regex == "" || (regex == "$" && word == ""):
 		return true
@@ -31,7 +30,6 @@ func checkStr(regex, word string) bool {
 }
 
 func compare(regex, word string) bool {
-
 	switch {
 	case regex == "":
 		return true

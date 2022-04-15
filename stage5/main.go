@@ -53,7 +53,6 @@ func checkStr(regex, word string) bool {
 }
 
 func compare(regex, word string) bool {
-
 	switch {
 	case regex == "":
 		return true
