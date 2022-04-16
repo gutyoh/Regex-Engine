@@ -38,7 +38,10 @@ func checkStr(regex, word string) string {
 	}
 }
 
-// New function compare uses a for loop to compare each character of 'regex' with 'word':
+// Here we apply Function decomposition, because we make compare an independent function
+// and not part of the checkStr function or the main function.
+
+// The compare function uses a for loop to "compare" each character of 'regex' with 'word':
 func compare(regex, word string) string {
 	if regex == "" {
 		return "True"
