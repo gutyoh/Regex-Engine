@@ -3,7 +3,7 @@ package main
 /*
 [Regex Engine - Stage 5/6: Controlling repetition](https://hyperskill.org/projects/114/stages/623/implement)
 -------------------------------------------------------------------------------
-##### 🚫 NO NEW TOPICS REQUIRED 🚫 #####
+[Type conversion and overflow](https://hyperskill.org/learn/topic/2040)
 */
 
 import (
@@ -22,52 +22,62 @@ func strInSlice(a string, list []string) bool {
 	return false
 }
 
-func checkChar(regex, char string) bool {
-	return regex == "" || char == regex || (regex == "." && char != "")
+func checkChar(regex, char string) string {
+	if regex == "" || char == regex || (regex == "." && char != "") {
+		return "True"
+	}
+	return "False"
 }
 
-func checkStr(regex, word string) bool {
+func checkStr(regex, word string) string {
 	switch {
 	case regex == "" || (regex == "$" && word == ""):
-		return true
+		return "True"
 
 	case word == "":
-		return false
+		return "False"
 
+	// Add a new case to match if the regex contains the meta-characters '*', '+' and '?'
+	// We also need to "cast" 'regex[x]' to a string, so we can use it with the strInSlice function:
 	case len(regex) > 1 && strInSlice(string(regex[1]), []string{"*", "+", "?"}):
-		if strInSlice(string(regex[1]), []string{"?", "*"}) && checkStr(regex[2:], word) {
-			return true
+		if strInSlice(string(regex[1]), []string{"?", "*"}) && checkStr(regex[2:], word) == "True" {
+			return "True"
+		} else if checkChar(string(regex[0]), string(word[0])) == "True" &&
+			(strInSlice(string(regex[1]), []string{"?", "+"}) && (checkStr(regex[2:], word[1:])) == "True" ||
+				(strInSlice(string(regex[1]), []string{"*", "+"}) && (checkStr(regex, word[1:])) == "True")) {
+			return "True"
+		} else {
+			return "False"
 		}
 
-		if checkChar(string(regex[0]), string(word[0])) &&
-			(strInSlice(string(regex[1]), []string{"?", "+"}) && checkStr(regex[2:], word[1:])) ||
-			(strInSlice(string(regex[1]), []string{"*", "+"}) && checkStr(regex, word[1:])) {
-			return true
-		}
+	case checkChar(string(regex[0]), string(word[0])) == "False":
+		return "False"
 
-	case !checkChar(string(regex[0]), string(word[0])):
-		return false
+	case checkStr(regex[1:], word[1:]) == "True":
+		return "True"
+
+	default:
+		return "False"
 	}
-
-	return checkStr(regex[1:], word[1:])
 }
 
-func compare(regex, word string) bool {
+func compare(regex, word string) string {
 	switch {
 	case regex == "":
-		return true
+		return "True"
 
 	case regex[0] == '^':
-		return checkStr(regex[1:], word)
+		if checkStr(regex[1:], word) == "True" {
+			return "True"
+		}
 	}
 
 	for w, _ := range word {
-		if checkStr(regex, word[w:]) {
-			return true
+		if checkStr(regex, word[w:]) == "True" {
+			return "True"
 		}
 	}
-
-	return false
+	return "False"
 }
 
 func main() {

@@ -3,7 +3,7 @@ package main
 /*
 [Regex Engine - Stage 3/6: Working with strings of different length](https://hyperskill.org/projects/114/stages/621/implement)
 -------------------------------------------------------------------------------
-##### 🚫 NO NEW TOPICS REQUIRED 🚫 #####
+[Function decomposition](https://hyperskill.org/learn/topic/1893)
 */
 
 import (
@@ -13,33 +13,43 @@ import (
 	"strings"
 )
 
-func checkChar(regex, char string) bool {
-	return regex == "" || char == regex || (regex == "." && char != "")
+// Refactor the 'if' statement of checkChar to be more complex but shorter:
+func checkChar(regex, char string) string {
+	if regex == "" || char == regex || (regex == "." && char != "") {
+		return "True"
+	}
+	return "False"
 }
 
-func checkStr(regex, word string) bool {
+// Refactor the 'if' statement of checkString to use a 'switch' statement instead:
+func checkStr(regex, word string) string {
 	switch {
 	case regex == "":
-		return true
+		return "True"
 
-	case !checkChar(regex[0:1], word[0:1]):
-		return false
+	case checkChar(regex[0:1], word[0:1]) == "False":
+		return "False"
+
+	case checkStr(regex[1:], word[1:]) == "True":
+		return "True"
+
+	default:
+		return "False"
 	}
-	return checkStr(regex[1:], word[1:])
 }
 
-func compare(regex, word string) bool {
+// New function compare uses a for loop to compare each character of 'regex' with 'word':
+func compare(regex, word string) string {
 	if regex == "" {
-		return true
+		return "True"
 	}
 
 	for w, _ := range word {
-		if checkStr(regex, word[w:]) {
-			return true
+		if checkStr(regex, word[w:]) == "True" {
+			return "True"
 		}
 	}
-
-	return false
+	return "False"
 }
 
 func main() {

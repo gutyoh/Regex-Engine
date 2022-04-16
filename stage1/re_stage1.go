@@ -6,20 +6,14 @@ package main
 [Primitive types](https://hyperskill.org/learn/topic/1807)
 [Input/Output](https://hyperskill.org/learn/topic/1506)
 [Slices](https://hyperskill.org/learn/topic/1672)
-[Loops](https://hyperskill.org/learn/topic/1531)
-[Working with slices](https://hyperskill.org/learn/topic/1701)
+[Control statements](https://hyperskill.org/learn/topic/1728)
 [Operations with strings](https://hyperskill.org/learn/topic/2023)
-[Functions](https://hyperskill.org/learn/topic/1750)
 */
 
 import (
 	"fmt"
 	"strings"
 )
-
-func checkChar(regex, char string) bool {
-	return regex == "" || char == regex || (regex == "." && char != "")
-}
 
 func main() {
 	var line string
@@ -28,5 +22,13 @@ func main() {
 	regex := strings.Split(line, "|")[0]
 	char := strings.Split(line, "|")[1]
 
-	fmt.Println(checkChar(regex, char))
+	if regex == "" {
+		fmt.Println("True")
+	} else if char == "" {
+		fmt.Println("False")
+	} else if regex == "." || regex == char {
+		fmt.Println("True")
+	} else {
+		fmt.Println("False")
+	}
 }

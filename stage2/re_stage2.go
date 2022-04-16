@@ -3,7 +3,9 @@ package main
 /*
 [Regex Engine - Stage 2/6: Single character strings](https://hyperskill.org/projects/114/stages/620/implement)
 -------------------------------------------------------------------------------
-[Control statements](https://hyperskill.org/learn/topic/1728)
+[Loops](https://hyperskill.org/learn/topic/1531)
+[Working with slices](https://hyperskill.org/learn/topic/1701)
+[Functions](https://hyperskill.org/learn/topic/1750)
 [Advanced input](https://hyperskill.org/learn/topic/2027)
 */
 
@@ -14,19 +16,29 @@ import (
 	"strings"
 )
 
-func checkChar(regex, char string) bool {
-	return regex == "" || char == regex || (regex == "." && char != "")
+func checkChar(regex, char string) string {
+	if regex == "" {
+		return "True"
+	} else if char == regex {
+		return "True"
+	} else if regex == "." && char != "" {
+		return "True"
+	} else {
+		return "False"
+	}
 }
 
-func checkStr(regex, word string) bool {
-	switch {
-	case regex == "":
-		return true
-
-	case word == "" || !checkChar(regex[0:1], word[0:1]):
-		return false
+// New function checkStr, will help usp check for checking strings apart from chars
+func checkStr(regex, word string) string {
+	if regex == "" {
+		return "True"
+	} else if word == "" || checkChar(regex[0:1], word[0:1]) == "False" {
+		return "False"
+	} else if checkStr(regex[1:], word[1:]) == "True" {
+		return "True"
+	} else {
+		return "False"
 	}
-	return checkStr(regex[1:], word[1:])
 }
 
 func main() {
