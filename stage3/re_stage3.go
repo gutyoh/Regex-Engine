@@ -3,6 +3,7 @@ package main
 /*
 [Regex Engine - Stage 3/6: Working with strings of different length](https://hyperskill.org/projects/114/stages/621/implement)
 -------------------------------------------------------------------------------
+[Type conversion and overflow](https://hyperskill.org/learn/topic/2040)
 [Function decomposition](https://hyperskill.org/learn/topic/1893)
 */
 
@@ -13,54 +14,81 @@ import (
 	"strings"
 )
 
+func boolToStr(b bool) string {
+	if !b {
+		return "False"
+	}
+	return "True"
+}
+
 // Refactor the 'if' statement of checkChar to be more complex but shorter:
-func checkChar(regex, char string) string {
+func checkChar(regex, char string) bool {
 	if regex == "" || char == regex || (regex == "." && char != "") {
-		return "True"
+		return true
 	}
-	return "False"
+	return false
 }
 
-// Refactor the 'if' statement of checkString to use a 'switch' statement instead:
-func checkStr(regex, word string) string {
-	switch {
-	case regex == "":
-		return "True"
-
-	case checkChar(regex[0:1], word[0:1]) == "False":
-		return "False"
-
-	case checkStr(regex[1:], word[1:]) == "True":
-		return "True"
-
-	default:
-		return "False"
+// Here we apply Function decomposition; we'll start using several small functions
+// To help us separate in parts the logic of the checkStr() function.
+func endOfComparison(regex, word string) bool {
+	if !checkChar(string(regex[0]), string(word[0])) {
+		return false
 	}
+
+	if checkStr(regex[1:], word[1:]) {
+		return true
+	}
+	return false
 }
 
-// Here we apply Function decomposition, because we make compare an independent function
-// and not part of the checkStr function or the main function.
-
-// The compare function uses a for loop to "compare" each character of 'regex' with 'word':
-func compare(regex, word string) string {
-	if regex == "" {
-		return "True"
-	}
-
-	for w, _ := range word {
-		if checkStr(regex, word[w:]) == "True" {
-			return "True"
+func fullScanComparison(regex, word string) bool {
+	for w := range word {
+		if checkStr(regex, word[w:]) {
+			return true
 		}
 	}
-	return "False"
+	return false
+}
+
+func compare(regex, word string) bool {
+	if regex == "" {
+		return true
+	}
+
+	return fullScanComparison(regex, word)
+}
+
+// Refactor checkStr() to make it shorter and call endOfComparison() within it:
+func checkStr(regex, word string) bool {
+	if regex == "" {
+		return true
+	}
+
+	if word == "" {
+		return false
+	}
+
+	if endOfComparison(regex, word) {
+		return true
+	}
+
+	return false
 }
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
-	line := strings.Split(scanner.Text(), "|")
 
+	// if scanner.Text() doesn't contain the "|" symbol, exit the program:
+	if !strings.Contains(scanner.Text(), "|") {
+		fmt.Println("False")
+		return
+	}
+
+	// if scanner.Text() contains the | symbol, split 'line' by the | symbol and continue with the program:
+	line := strings.Split(scanner.Text(), "|")
 	regex, word := line[0], line[1]
 
-	fmt.Println(compare(regex, word))
+	fmt.Println(boolToStr(compare(regex, word)))
 }

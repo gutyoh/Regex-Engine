@@ -13,56 +13,84 @@ import (
 	"strings"
 )
 
-func checkChar(regex, char string) string {
+func boolToStr(b bool) string {
+	if !b {
+		return "False"
+	}
+	return "True"
+}
+
+func checkChar(regex, char string) bool {
 	if regex == "" || char == regex || (regex == "." && char != "") {
-		return "True"
+		return true
 	}
-	return "False"
+	return false
 }
 
-func checkStr(regex, word string) string {
-	switch {
-	// Add a check for one of the new special cases; if the regex ends with the the '$' character:
-	case regex == "" || (regex == "$" && word == ""):
-		return "True"
-
-	case checkChar(regex[0:1], word[0:1]) == "False":
-		return "False"
-
-	case checkStr(regex[1:], word[1:]) == "True":
-		return "True"
-
-	default:
-		return "False"
+func endOfComparison(regex, word string) bool {
+	if !checkChar(string(regex[0]), string(word[0])) {
+		return false
 	}
+
+	if checkStr(regex[1:], word[1:]) {
+		return true
+	}
+	return false
 }
 
-func compare(regex, word string) string {
-	switch {
-	case regex == "":
-		return "True"
-
-	// Add another check for the second special case; if the regex begins with the '^' character:
-	case regex[0] == '^':
-		if checkStr(regex[1:], word) == "True" {
-			return "True"
+func fullScanComparison(regex, word string) bool {
+	for w := range word {
+		if checkStr(regex, word[w:]) {
+			return true
 		}
 	}
+	return false
+}
 
-	for w, _ := range word {
-		if checkStr(regex, word[w:]) == "True" {
-			return "True"
+func compare(regex, word string) bool {
+	if regex == "" {
+		return true
+	}
+
+	// Add a "new check" for the first special case; if the regex begins with the '^' character:
+	if regex[0] == '^' {
+		if checkStr(regex[1:], word) {
+			return true
 		}
 	}
-	return "False"
+	return fullScanComparison(regex, word)
+}
+
+func checkStr(regex, word string) bool {
+	// Add another "new check" for the second special case; if the regex ends with the the '$' character:
+	if regex == "" || (regex == "$" && word == "") {
+		return true
+	}
+
+	if word == "" {
+		return false
+	}
+
+	if endOfComparison(regex, word) {
+		return true
+	}
+
+	return false
 }
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
-	line := strings.Split(scanner.Text(), "|")
 
+	// if scanner.Text() doesn't contain the "|" symbol, exit the program:
+	if !strings.Contains(scanner.Text(), "|") {
+		fmt.Println("False")
+		return
+	}
+
+	// if scanner.Text() contains the | symbol, split 'line' by the | symbol and continue with the program:
+	line := strings.Split(scanner.Text(), "|")
 	regex, word := line[0], line[1]
 
-	fmt.Println(compare(regex, word))
+	fmt.Println(boolToStr(compare(regex, word)))
 }
