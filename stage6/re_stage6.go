@@ -36,6 +36,32 @@ func checkChar(regex, char string) bool {
 	return false
 }
 
+func checkGreedyTokens(regex, word string) bool {
+	if len(regex) > 1 && strInSlice(string(regex[1]), []string{"*", "+", "?"}) {
+		if strInSlice(string(regex[1]), []string{"?", "*"}) && checkStr(regex[2:], word) {
+			return true
+		} else if checkChar(string(regex[0]), string(word[0])) {
+			if strInSlice(string(regex[1]), []string{"?", "+"}) && (checkStr(regex[2:], word[1:])) {
+				return true
+			} else if strInSlice(string(regex[1]), []string{"*", "+"}) && (checkStr(regex, word[1:])) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func endOfComparison(regex, word string) bool {
+	if !checkChar(string(regex[0]), string(word[0])) {
+		return false
+	}
+
+	if checkStr(regex[1:], word[1:]) {
+		return true
+	}
+	return false
+}
+
 func checkStr(regex, word string) bool {
 	if regex == "" || (regex == "$" && word == "") {
 		return true
@@ -53,29 +79,10 @@ func checkStr(regex, word string) bool {
 		return true
 	}
 
-	if !checkChar(string(regex[0]), string(word[0])) {
-		return false
-	}
-
-	if checkStr(regex[1:], word[1:]) {
+	if endOfComparison(regex, word) {
 		return true
 	}
 
-	return false
-}
-
-func checkGreedyTokens(regex, word string) bool {
-	if len(regex) > 1 && strInSlice(string(regex[1]), []string{"*", "+", "?"}) {
-		if strInSlice(string(regex[1]), []string{"?", "*"}) && checkStr(regex[2:], word) {
-			return true
-		} else if checkChar(string(regex[0]), string(word[0])) {
-			if strInSlice(string(regex[1]), []string{"?", "+"}) && (checkStr(regex[2:], word[1:])) {
-				return true
-			} else if strInSlice(string(regex[1]), []string{"*", "+"}) && (checkStr(regex, word[1:])) {
-				return true
-			}
-		}
-	}
 	return false
 }
 
@@ -89,7 +96,10 @@ func compare(regex, word string) string {
 			return boolToStr(true)
 		}
 	}
+	return fullScanComparison(regex, word)
+}
 
+func fullScanComparison(regex, word string) string {
 	for w := range word {
 		if checkStr(regex, word[w:]) {
 			return boolToStr(true)
