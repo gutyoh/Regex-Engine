@@ -19,6 +19,12 @@ func main() {
 	var line string
 	fmt.Scanln(&line)
 
+	// if line doesn't contain the "|" symbol, print "False" and exit the program:
+	if !strings.Contains(line, "|") {
+		fmt.Println("False")
+		return
+	}
+
 	regex := strings.Split(line, "|")[0]
 	char := strings.Split(line, "|")[1]
 

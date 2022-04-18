@@ -22,72 +22,94 @@ func strInSlice(a string, list []string) bool {
 	return false
 }
 
-func checkChar(regex, char string) string {
-	if regex == "" || char == regex || (regex == "." && char != "") {
-		return "True"
+func boolToStr(b bool) string {
+	if !b {
+		return "False"
 	}
-	return "False"
+	return "True"
 }
 
-func checkStr(regex, word string) string {
-	switch {
-	case regex == "" || (regex == "$" && word == ""):
-		return "True"
-
-	case word == "":
-		return "False"
-
-	// Add the final case to use the '\' character to "escape" the meta-characters '*', '+', '?', '^' and '.':
-	case regex[0] == '\\':
-		return checkStr(regex[1:], word)
-
-	case len(regex) > 1 && strInSlice(string(regex[1]), []string{"*", "+", "?"}):
-		if strInSlice(string(regex[1]), []string{"?", "*"}) && checkStr(regex[2:], word) == "True" {
-			return "True"
-		} else if checkChar(string(regex[0]), string(word[0])) == "True" &&
-			(strInSlice(string(regex[1]), []string{"?", "+"}) && (checkStr(regex[2:], word[1:])) == "True" ||
-				(strInSlice(string(regex[1]), []string{"*", "+"}) && (checkStr(regex, word[1:])) == "True")) {
-			return "True"
-		} else {
-			return "False"
-		}
-
-	case checkChar(string(regex[0]), string(word[0])) == "False":
-		return "False"
-
-	case checkStr(regex[1:], word[1:]) == "True":
-		return "True"
-
-	default:
-		return "False"
+func checkChar(regex, char string) bool {
+	if regex == "" || char == regex || (regex == "." && char != "") {
+		return true
 	}
+	return false
+}
+
+func checkStr(regex, word string) bool {
+	if regex == "" || (regex == "$" && word == "") {
+		return true
+	}
+
+	if word == "" {
+		return false
+	}
+
+	if strings.Contains(regex, "\\") {
+		return checkStr(regex[1:], word)
+	}
+
+	if checkGreedyTokens(regex, word) {
+		return true
+	}
+
+	if !checkChar(string(regex[0]), string(word[0])) {
+		return false
+	}
+
+	if checkStr(regex[1:], word[1:]) {
+		return true
+	}
+
+	return false
+}
+
+func checkGreedyTokens(regex, word string) bool {
+	if len(regex) > 1 && strInSlice(string(regex[1]), []string{"*", "+", "?"}) {
+		if strInSlice(string(regex[1]), []string{"?", "*"}) && checkStr(regex[2:], word) {
+			return true
+		} else if checkChar(string(regex[0]), string(word[0])) {
+			if strInSlice(string(regex[1]), []string{"?", "+"}) && (checkStr(regex[2:], word[1:])) {
+				return true
+			} else if strInSlice(string(regex[1]), []string{"*", "+"}) && (checkStr(regex, word[1:])) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func compare(regex, word string) string {
-	switch {
-	case regex == "":
-		return "True"
+	if regex == "" {
+		return boolToStr(true)
+	}
 
-	case regex[0] == '^':
-		if checkStr(regex[1:], word) == "True" {
-			return "True"
+	if regex[0] == '^' {
+		if checkStr(regex[1:], word) {
+			return boolToStr(true)
 		}
 	}
 
-	for w, _ := range word {
-		if checkStr(regex, word[w:]) == "True" {
-			return "True"
+	for w := range word {
+		if checkStr(regex, word[w:]) {
+			return boolToStr(true)
 		}
 	}
-	return "False"
+	return boolToStr(false)
 }
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
+
+	// if scanner.Text() doesn't contain the "|" symbol, exit the program:
+	if !strings.Contains(scanner.Text(), "|") {
+		fmt.Println("False")
+		return
+	}
+
+	// if scanner.Text() contains the | symbol, split 'line' by the | symbol and continue with the program:
 	line := strings.Split(scanner.Text(), "|")
-
 	regex, word := line[0], line[1]
-
 	fmt.Println(compare(regex, word))
 }
