@@ -111,7 +111,7 @@ func compare(regex, word string) bool {
 	return fullScanComparison(regex, word)
 }
 
-// checkStr() checks for all possible cases of the regex
+// checkStr() checks for most test cases of the regex
 // First we check if the regex is empty or if it contains "$", next we check if the word is empty,
 // Then we check if the regex contains the "escape" character -- "\"
 // Then we check if the regex contains the greedy tokens -- "?", "*", "+" with checkGreedyTokens()
