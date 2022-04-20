@@ -3,6 +3,8 @@ package main
 /*
 [Regex Engine - Stage 3/6: Working with strings of different length](https://hyperskill.org/projects/114/stages/621/implement)
 -------------------------------------------------------------------------------
+[Loops](https://hyperskill.org/learn/topic/1531)
+[Working with slices](https://hyperskill.org/learn/topic/1701)
 [Type conversion and overflow](https://hyperskill.org/learn/topic/2040)
 [Function decomposition](https://hyperskill.org/learn/topic/1893)
 */
