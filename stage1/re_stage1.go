@@ -8,6 +8,7 @@ package main
 [Slices](https://hyperskill.org/learn/topic/1672)
 [Control statements](https://hyperskill.org/learn/topic/1728)
 [Operations with strings](https://hyperskill.org/learn/topic/2023)
+[Regexps basics](https://hyperskill.org/learn/topic/577)
 */
 
 import (
