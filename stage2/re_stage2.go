@@ -3,8 +3,6 @@ package main
 /*
 [Regex Engine - Stage 2/6: Single character strings](https://hyperskill.org/projects/114/stages/620/implement)
 -------------------------------------------------------------------------------
-[Loops](https://hyperskill.org/learn/topic/1531)
-[Working with slices](https://hyperskill.org/learn/topic/1701)
 [Functions](https://hyperskill.org/learn/topic/1750)
 [Advanced input](https://hyperskill.org/learn/topic/2027)
 */
