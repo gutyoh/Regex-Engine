@@ -3,7 +3,8 @@ package main
 /*
 [Regex Engine - Stage 4/6: Implementing the operators ^ and $](https://hyperskill.org/projects/114/stages/622/implement)
 -------------------------------------------------------------------------------
-##### 🚫 NO NEW TOPICS REQUIRED 🚫 #####
+[Structs](https://hyperskill.org/learn/topic/1891)
+[Methods](https://hyperskill.org/learn/topic/1928)
 */
 
 import (
