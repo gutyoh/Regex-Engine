@@ -5,15 +5,15 @@ from hstest.test_case import SimpleTestCase
 
 class RegexTest(StageTest):
     m_cases = [
-        ("a", "a",          "true",     "Two identical patterns should return True!"),
-        ("a", "b",          "false",    "Two different patterns should not return True!"),
-        ("7", "7",          "true",     "Two identical patterns should return True!"),
-        ("6", "7",          "false",    "Two different patterns should not return True!"),
-        (".", "a",          "true",     "Don't forget that '.' is a wild-card that matches any single character."),
-        ("a", ".",          "false",    "A period in the input string is still a literal!"),
-        ("", "a",           "true",     "An empty regex always returns True!"),
-        ("", "",            "true",     "An empty regex always returns True!"),
-        ("a", "",           "false",    "A non-empty regex and an empty input string always returns False!")
+        ("a", "a",          "True",     "Two identical patterns should return True!"),
+        ("a", "b",          "False",    "Two different patterns should not return True!"),
+        ("7", "7",          "True",     "Two identical patterns should return True!"),
+        ("6", "7",          "False",    "Two different patterns should not return True!"),
+        (".", "a",          "True",     "Don't forget that '.' is a wild-card that matches any single character."),
+        ("a", ".",          "False",    "A period in the input string is still a literal!"),
+        ("", "a",           "True",     "An empty regex always returns True!"),
+        ("", "",            "True",     "An empty regex always returns True!"),
+        ("a", "",           "False",    "A non-empty regex and an empty input string always returns False!")
     ]
 
 
